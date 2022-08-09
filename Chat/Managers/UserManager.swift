@@ -20,10 +20,8 @@ final class UserManager: FirebaseManager {
 
     
     func startFetchingUsers(completion: @escaping ItemClosure<[UserModel]>) {
-
         usersRef.observe(.value) { [weak self] snapshot in
-            
-            if let dict = snapshot.value as? [String: [String: Any]] {
+            if let dict = snapshot.value as? [String: Any] {
                 let users = dict.map { (_, value) -> UserModel in
                     return try! UserModel(from: value)               
                 }

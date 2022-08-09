@@ -6,10 +6,9 @@
 //
 
 import Foundation
+import ARSLineProgress
 
 protocol SignInViewModelType {
-    
-    var viewDelegate: SignInViewModelViewDelegate? { get set }
 
     func startSignIn(with name: String)
     
@@ -26,22 +25,11 @@ protocol SignInViewModelCoordinatorDelegate: AnyObject {
     func didLogin()
 }
 
-protocol SignInViewModelViewDelegate: AnyObject {
-    
-    var viewModel: SignInViewModelType? { get set }
-
-}
-
 class SignInVM {
     
-    // MARK: - Delegates
-    private weak var coordinatorDelegate: SignInViewModelCoordinatorDelegate!
-    
-    weak var viewDelegate: SignInViewModelViewDelegate?
-    
     // MARK: - Properties
-    
     private var registerModel: UserModel?
+    private weak var coordinatorDelegate: SignInViewModelCoordinatorDelegate!
 
     // MARK: - Init
     init(coordintaor: SignInViewModelCoordinatorDelegate) {
@@ -51,24 +39,32 @@ class SignInVM {
     // MARK: - Network
     func signUp() {
         guard let model = registerModel else { return }
+        
+        ARSLineProgress.show()
         AuthManager.shared.signUp(with: model) { result in
-            switch result {
-            case .error(let massage):
-                self.coordinatorDelegate.AuthError(with: massage.changed())
-            case .success:
-                self.coordinatorDelegate.didLogin()
+            ARSLineProgress.hideWithCompletionBlock {
+                switch result {
+                case .error(let massage):
+                    self.coordinatorDelegate.AuthError(with: massage.changed())
+                case .success:
+                    self.coordinatorDelegate.didLogin()
+                }
             }
         }
     }
     
     func signIn() {
         guard let model = registerModel else { return }
+        
+        ARSLineProgress.show()
         AuthManager.shared.signIn(with: model) { result in
-            switch result {
-            case .error(let massage):
-                self.coordinatorDelegate.AuthError(with: massage.changed())
-            case .success:
-                self.coordinatorDelegate.didLogin()
+            ARSLineProgress.hideWithCompletionBlock {
+                switch result {
+                case .error(let massage):
+                    self.coordinatorDelegate.AuthError(with: massage.changed())
+                case .success:
+                    self.coordinatorDelegate.didLogin()
+                }
             }
         }
     }

@@ -9,7 +9,9 @@ import Foundation
 
 protocol ChatViewModelType {
     
-    var viewDelegate: ChatViewModelViewDelegate? { get set }
+    var updateTable: VoidClouser? { get set }
+    
+    var scrollToRow: ((_ row: Int, _ animated: Bool) -> Void)? { get set }
     
     func backButtonTapped()
     
@@ -33,23 +35,11 @@ protocol ChatViewModelCoordinatorDelegate: AnyObject {
     func userDidEndChat()
 }
 
-protocol ChatViewModelViewDelegate: AnyObject {
-    
-    var viewModel: ChatViewModelType? { get set }
-    
-    func updateTable()
-    
-    func scrollToRow(_ row: Int, animated: Bool)
-}
-
 class ChatVM {
     
-    // MARK: - Delegates
+    // MARK: - Properties
     private weak var coordinatorDelegate: ChatViewModelCoordinatorDelegate!
     
-    weak var viewDelegate: ChatViewModelViewDelegate?
-    
-    // MARK: - Properties
     private let opponent: UserModel!
     
     var currentUser: UserModel! {
@@ -83,6 +73,10 @@ class ChatVM {
     
     private var isPaginating = false
     
+    var updateTable: VoidClouser?
+    
+    var scrollToRow: ((Int, Bool) -> Void)?
+    
     init(with user: UserModel, and chatId: String?, coordintaor: ChatViewModelCoordinatorDelegate) {
         
         self.chatId = chatId
@@ -107,13 +101,14 @@ class ChatVM {
             
         } else {
             
-            viewDelegate?.updateTable()
+            updateTable?()
             
             guard scrollToUnreadMessage else { return }
             scrollToUnreadMessage.toggle()
             
             guard let index = currentMessages.lastIndex(where: { !$0.isReaded && $0.isSenderOpponent }) else { return }
-            viewDelegate?.scrollToRow(index, animated: false)
+            scrollToRow?(index, false)
+            
         }
     }
 }
@@ -224,7 +219,7 @@ extension ChatVM: ChatViewModelType {
         
         guard currentMessages.count > 1 else { return }
     
-        viewDelegate?.scrollToRow(0, animated: false)
+        scrollToRow?(0, false)
         let unreadedMessages = currentMessages.filter({ $0.isReaded == false && $0.isSenderOpponent })
         guard !unreadedMessages.isEmpty else { return }
         ChatManager.shared.setIsRead(for: unreadedMessages, with: chatId)

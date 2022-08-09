@@ -17,16 +17,16 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mMb-ee-ZNt">
-                        <rect key="frame" x="60" y="4" width="307" height="120"/>
+                        <rect key="frame" x="315" y="4" width="52" height="120"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalCompressionResistancePriority="749" text="LabelLabelLabelLabelLabelLabelLabelLabelLabelLabelLabel" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GNc-EO-h9v">
-                                <rect key="frame" x="4" y="4" width="299" height="92"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalCompressionResistancePriority="749" text="a" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GNc-EO-h9v">
+                                <rect key="frame" x="8" y="4" width="9" height="92"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="13:12" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mdl-3Y-h7r">
-                                <rect key="frame" x="8" y="96" width="291" height="16"/>
+                                <rect key="frame" x="8" y="96" width="36" height="16"/>
                                 <fontDescription key="fontDescription" type="italicSystem" pointSize="13"/>
                                 <color key="textColor" systemColor="systemGrayColor"/>
                                 <nil key="highlightedColor"/>
@@ -36,9 +36,9 @@
                         <constraints>
                             <constraint firstItem="Mdl-3Y-h7r" firstAttribute="leading" secondItem="mMb-ee-ZNt" secondAttribute="leading" constant="8" id="Jo2-04-suN"/>
                             <constraint firstItem="GNc-EO-h9v" firstAttribute="top" secondItem="mMb-ee-ZNt" secondAttribute="top" constant="4" id="OKl-Nl-bAh"/>
-                            <constraint firstItem="GNc-EO-h9v" firstAttribute="leading" secondItem="mMb-ee-ZNt" secondAttribute="leading" constant="4" id="Rnw-SJ-dkY"/>
+                            <constraint firstItem="GNc-EO-h9v" firstAttribute="leading" secondItem="mMb-ee-ZNt" secondAttribute="leading" constant="8" id="Rnw-SJ-dkY"/>
                             <constraint firstAttribute="trailing" secondItem="Mdl-3Y-h7r" secondAttribute="trailing" constant="8" id="VNz-Og-CU3"/>
-                            <constraint firstAttribute="trailing" secondItem="GNc-EO-h9v" secondAttribute="trailing" constant="4" id="YF8-cy-mWp"/>
+                            <constraint firstAttribute="trailing" secondItem="GNc-EO-h9v" secondAttribute="trailing" constant="35" id="YF8-cy-mWp"/>
                             <constraint firstItem="Mdl-3Y-h7r" firstAttribute="top" secondItem="GNc-EO-h9v" secondAttribute="bottom" id="c7l-we-TWl"/>
                             <constraint firstAttribute="bottom" secondItem="Mdl-3Y-h7r" secondAttribute="bottom" constant="8" id="vUb-sK-Dmx"/>
                         </constraints>

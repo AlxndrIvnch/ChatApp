@@ -12,7 +12,14 @@ class ChatVC: UIViewController {
     // MARK: - Properties
     var viewModel: ChatViewModelType? {
         didSet {
-            viewModel?.viewDelegate = self
+            viewModel?.updateTable = { [weak self] in
+                self?.chatTableView.reloadData()
+            }
+            viewModel?.scrollToRow = { [weak self] row, animated in
+                let indexPath = IndexPath(row: row, section: 0)
+                self?.chatTableView.scrollToRow(at: indexPath, at: .none, animated: animated)
+                
+            }
          }
     }
     
@@ -89,19 +96,6 @@ class ChatVC: UIViewController {
         view.endEditing(true)
     }  
 
-}
-
-extension ChatVC: ChatViewModelViewDelegate {
-    
-    func updateTable() {
-        chatTableView.reloadData()
-    }
-    
-    func scrollToRow(_ row: Int, animated: Bool) {
-        let indexPath = IndexPath(row: row, section: 0)
-        chatTableView.scrollToRow(at: indexPath, at: .none, animated: animated)
-    }
-    
 }
 
 extension ChatVC: UITableViewDelegate {

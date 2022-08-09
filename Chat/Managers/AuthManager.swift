@@ -8,6 +8,7 @@
 import Foundation
 import FirebaseDatabase
 import FirebaseAuth
+import ARSLineProgress
 
 class AuthManager: FirebaseManager {
     
@@ -15,18 +16,18 @@ class AuthManager: FirebaseManager {
     
     private override init() {}
     
-    private let password = "123456" //any password, beacouse we don't use password in app now, but 6 characters long or more is Firebase requirement
+    private let password = "123456" //any password, beacouse we don't need password in app now, but 6 characters long or more is Firebase requirement
     
     var currentUser: User? {
         return auth.currentUser
     }
 
     func signUp(with model: UserModel, completion: @escaping ItemClosure<Result>) {
-
-        let mailedName = model.name.mailed()
         
-        auth.createUser(withEmail: mailedName, password: password) { result, error in
-            
+        let mailedName = model.name.mailed()
+
+        auth.createUser(withEmail: mailedName, password: password) { [weak self] result, error in
+
             if let error = error {
                 completion(.error(error.localizedDescription))
                 return
@@ -38,7 +39,7 @@ class AuthManager: FirebaseManager {
             var dictionary = model.dictionary
             dictionary?[Key.id.rawValue] = id
             
-            self.usersRef.child(id).setValue(dictionary)
+            self?.usersRef.child(id).setValue(dictionary)
             completion(.success)
             
         }
@@ -48,14 +49,12 @@ class AuthManager: FirebaseManager {
     func signIn(with model: UserModel, completion: @escaping ItemClosure<Result>) {
         
         let mailedName = model.name.mailed()
-        
+
         auth.signIn(withEmail: mailedName, password: password) { result, error in
-            
             if let error = error {
                 completion(.error(error.localizedDescription))
                 return
             }
-
             completion(.success)
         }
     }
@@ -68,7 +67,6 @@ class AuthManager: FirebaseManager {
         do {
             try auth.signOut()
         } catch {
-            print("Logout error" + error.localizedDescription)
             return false
         }
         return true

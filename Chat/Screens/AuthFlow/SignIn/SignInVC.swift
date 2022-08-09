@@ -10,11 +10,7 @@ import UIKit
 class SignInVC: UIViewController {
 
     // MARK: - Properties
-    var viewModel: SignInViewModelType? {
-        didSet {
-             viewModel?.viewDelegate = self
-         }
-    }
+    var viewModel: SignInViewModelType?
     
     // MARK: - Outlets
     @IBOutlet weak var loginTextField: UITextField!
@@ -55,8 +51,4 @@ class SignInVC: UIViewController {
     @objc func dismissMyKeyboard(){
         view.endEditing(true)
     }
-}
-
-extension SignInVC: SignInViewModelViewDelegate {
-    
 }

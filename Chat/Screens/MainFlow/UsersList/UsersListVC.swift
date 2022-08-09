@@ -12,10 +12,13 @@ class UsersListVC: UIViewController {
     // MARK: - Properties
     var viewModel: UsersListViewModelType? {
         didSet {
-            viewModel?.viewDelegate = self
+            viewModel?.updateTable = { [weak self] in
+                self?.usersTableView.reloadData()
+            }
          }
     }
-
+    
+    // MARK: - Outlets
     @IBOutlet weak var usersTableView: UITableView!
     
     override func viewDidLoad() {
@@ -49,14 +52,6 @@ class UsersListVC: UIViewController {
     @objc func logoutButtonTapped() {
         viewModel?.logoutButtonTapped()
     }
-}
-
-extension UsersListVC: UsersListViewModelViewDelegate {
-    
-    func updateTable() {
-        usersTableView.reloadData()
-    }
-    
 }
 
 extension UsersListVC: UITableViewDelegate {

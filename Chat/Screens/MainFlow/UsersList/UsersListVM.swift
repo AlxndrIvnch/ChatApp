@@ -6,10 +6,11 @@
 //
 
 import Foundation
+import ARSLineProgress
 
 protocol UsersListViewModelType {
     
-    var viewDelegate: UsersListViewModelViewDelegate? { get set }
+    var updateTable: VoidClouser? { get set }
     
     func getNumberOfRows() -> Int
     
@@ -32,30 +33,22 @@ protocol UsersListViewModelCoordinatorDelegate: AnyObject {
     func userDidSellectUser(_ user: UserModel, with chatId: String?)
 }
 
-protocol UsersListViewModelViewDelegate: AnyObject {
-    
-    var viewModel: UsersListViewModelType? { get set }
-    
-    func updateTable()
-}
-
 class UsersListVM {
     
-    // MARK: - Delegates
+    // MARK: - Properties
     private weak var coordinatorDelegate: UsersListViewModelCoordinatorDelegate!
     
-    weak var viewDelegate: UsersListViewModelViewDelegate?
-    
-    // MARK: - Properties
     private var users: [UserModel] = [] {
         didSet {
-            viewDelegate?.updateTable()
+            updateTable?()
         }
     }
     
     private var chats: [Chat] = []
     
     private var dictUnreadCount = [String: Int]()
+    
+    var updateTable: VoidClouser?
     
     init(coordintaor: UsersListViewModelCoordinatorDelegate) {
         
@@ -68,10 +61,10 @@ extension UsersListVM: UsersListViewModelType {
     // MARK: - Data Source
     
     func startUpdatingUsers() {
-        
+
+        ARSLineProgress.show()
         UserManager.shared.startFetchingUsers { [weak self] users in
             ChatManager.shared.loadChats { chats in
-                
                 guard let self = self else { return }
                 guard let currentUser = UserManager.shared.currentUser else { return }
                 
@@ -108,6 +101,7 @@ extension UsersListVM: UsersListViewModelType {
                         dictForSorting.updateValue(user.creationTime, forKey: user.id)
                     }
                 }
+                ARSLineProgress.hide()
                 self.chats = currentChats
                 self.users = users.sorted { user1, user2 in
                     return dictForSorting[user1.id]! > dictForSorting[user2.id]!

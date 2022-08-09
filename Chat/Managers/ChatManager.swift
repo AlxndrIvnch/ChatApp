@@ -6,6 +6,7 @@
 //
 import Firebase
 import Foundation
+import ARSLineProgress
 
 class ChatManager: FirebaseManager {
     
@@ -16,7 +17,7 @@ class ChatManager: FirebaseManager {
     func loadChats(completion: @escaping ItemClosure<[Chat]>) {
         DispatchQueue.global().async { [weak self] in
             self?.chatsRef.observeSingleEvent(of: .value) { snapshot in
-                if let dict = snapshot.value as? [String: [String: Any]] {
+                if let dict = snapshot.value as? [String: Any] {
                     let chats = dict.map { (_, value) -> Chat in
                         return try! Chat(from: value)
                     }
@@ -85,7 +86,7 @@ class ChatManager: FirebaseManager {
         DispatchQueue.global().async { [weak self] in
             self?.chatsRef.queryOrdered(byChild: Key.lastActionTime.rawValue).queryLimited(toLast: 1).observe(.value) { snapshot in
                 
-                if let dict = snapshot.value as? [String: [String: Any]] {
+                if let dict = snapshot.value as? [String: Any] {
                     let chats = dict.map { (_, value) -> Chat in
                         return try! Chat(from: value)
                     }
@@ -98,10 +99,11 @@ class ChatManager: FirebaseManager {
     }
 
     func loadMessagesFromChat(with chatId: String, limit: Int, completion: @escaping ItemClosure<[Message]>) {
+        ARSLineProgress.show()
         DispatchQueue.global().async { [weak self] in
             self?.chatsRef.child(chatId).child(Key.messages.rawValue).queryOrdered(byChild: Key.time.rawValue).queryLimited(toLast: UInt(limit)).observeSingleEvent(of: .value) { snapshot in
- 
-                if let dict = snapshot.value as? [String: [String: Any]] {
+                ARSLineProgress.hide()
+                if let dict = snapshot.value as? [String: Any] {
                     let messages = dict.map { (_, value) -> Message in
                         return try! Message(from: value)
                     }
@@ -117,7 +119,7 @@ class ChatManager: FirebaseManager {
         DispatchQueue.global().async { [weak self] in
             self?.chatsRef.child(chatId).child(Key.messages.rawValue).queryOrdered(byChild: Key.time.rawValue).queryLimited(toLast: 1).observe(.value) { snapshot in
                 
-                if let dict = snapshot.value as? [String: [String: Any]] {
+                if let dict = snapshot.value as? [String: Any] {
                     let messages = dict.map { (_, value) -> Message in
                         return try! Message(from: value)
                     }
@@ -133,7 +135,7 @@ class ChatManager: FirebaseManager {
         DispatchQueue.global().async { [weak self] in
             self?.chatsRef.child(chatId).child(Key.messages.rawValue).queryOrdered(byChild: Key.time.rawValue).queryEnding(atValue: lastFechedMessageId).queryLimited(toLast: UInt(limit)).observeSingleEvent(of: .value) { snapshot in
 
-                if let dict = snapshot.value as? [String: [String: Any]] {
+                if let dict = snapshot.value as? [String: Any] {
                     let messages = dict.map { (_, value) -> Message in
                         return try! Message(from: value)
                     }
